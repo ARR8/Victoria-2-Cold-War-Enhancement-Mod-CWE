@@ -1,3 +1,6 @@
+###########################################################################
+# German Refugees
+###########################################################################
 country_event = {
   id = 8231000
   title = EVT_8231000_NAME
@@ -433,4 +436,56 @@ country_event = {
     name = EVT_8231102_A
 	add_country_modifier = { name = german_scientists duration = 365 }
   }
+}
+###########################################################################
+#Ending Diaspora
+###########################################################################
+country_event = {
+	id = 8231103
+	title = EVT_8231103_NAME
+	desc = EVT_8231103_DESC
+	#picture
+	
+	trigger = {
+		NOT = { immigration_policy = nobody_gets_out }
+		war = no
+		OR = {
+			AND = {
+				tag = ISR
+				government = democracy
+			}
+			AND = {
+				tag = ARM
+				owns = 885 # Kars, for Mount Ararat
+			}
+			tag = CIR
+			AND = {
+				tag = CRI
+				NOT = { exists = TAR }
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 12
+		modifier = {
+			factor = 2
+			is_vassal = yes
+		}
+	}
+
+	option = {
+		name = EVT_8231103_A
+		any_country = {
+			any_owned = {
+				limit = {
+					any_pop = { is_culture_group = THIS }
+				}
+				add_province_modifier = {
+					name = cultural_diaspora
+					duration = -1
+				}
+			}
+		}
+	}
 }

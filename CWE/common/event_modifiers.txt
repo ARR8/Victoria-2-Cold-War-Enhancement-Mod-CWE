@@ -3976,6 +3976,10 @@ german_scientists = {
 	icon = 5
 }
 
+cultural_diaspora = {
+	icon = 20
+}
+
 colonial_mismanagement = {
 	pop_militancy_modifier = -0.02
 	farm_rgo_eff = -0.5
