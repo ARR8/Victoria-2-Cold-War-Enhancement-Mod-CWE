@@ -1306,13 +1306,17 @@ country_event = {
   picture = "nwo2_manchurian_offensive"
   fire_only_once = yes
 
-  trigger = {
-    tag = RUS
-    year = 1945 NOT = { year = 1963 }
+  trigger = { # RUS
+	owns = 45 # Changchun
+	NOT = { OR = { primary_culture = chinese primary_culture = manchu } }
+	year = 1945 NOT = { year = 1963 }
 	war = no
-    NOT = { RUS = { war_with = CHI } }
+	NOT = {
+		war_with = CHI
+		war_with = KMT
+	}
     #NOT = { exists = MCK }
-    NOT = { exists = IMN }
+    #NOT = { exists = IMN }
     exists = CHI # and KMT 
   }
 
@@ -1324,8 +1328,9 @@ country_event = {
 	any_owned = { limit = { is_core = CHI } secede_province = MCK }
 	KMT = { inherit = MCK }
 	prestige = 10
-	KMT = { country_event = 8200005 } 
-	relation = { who = CHI value = -100 } 
+	KMT = { country_event = 8200005 }
+	relation = { who = CHI value = -100 }
+	country_event = 8200002
 	ai_chance = {
 		factor = 0.4
 		modifier = {
@@ -1374,7 +1379,7 @@ country_event = {
 	diplomatic_influence = { who = MCK value = 200 }
 	relation = { who = CHI value = -80 } 
 	relation = { who = KMT value = -80 } 
-	badboy = 7.5
+	badboy = 5 # Make sure is not > five less than choice D, otherwise better to pick that and release
 	prestige = -40
 	ai_chance = {
 		factor = 0.1
@@ -1421,12 +1426,98 @@ country_event = {
 	name = "OK"
   }
 }
+
+country_event = {
+	id = 8200002
+	title = EVT_8200002_NAME # Return of Puyi
+	desc = EVT_8200002_DESC
+	picture = "nwo2_manchurian_offensive"
+	fire_only_once = yes
+
+	trigger = {
+		owns = 1078 # Chita
+		45 = {
+			is_core = MCK # Return Manchuria event fired
+			NOT = { owned_by = THIS }
+		}
+		NOT = { primary_culture = chinese }
+		NOT = { year = 1990 }
+	}
+
+	mean_time_to_happen = {
+		months = 24
+	}
+
+	# Greater chance to escape if not great power
+	option = {
+		name = EVT_8200002_A # Repatriate him as a prisoner of war
+		# Chance for Pu Yi to escape. Change Manchuria to an absolute_monarchy, release it, and declare war. Chance is greater if not great power, such as a released Far Eastern Republic
+		ai_chance = {
+			factor = 0.5
+			modifier = {
+				factor = 0
+				is_greater_power = no # is (probably) Far Eastern Republic
+			}
+		}
+	}
+
+	option = {
+		name = EVT_8200002_B # Release him on the Manchu border
+		MCK = {
+			relation = { who = THIS value = 200 }
+			country_event = 8200004
+		}
+		ai_chance = {
+			factor = 0.5
+			modifier = {
+				factor = 0
+				is_our_vassal = MCK
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					government = hms_government
+					government = absolute_monarchy
+				}
+			}
+		}
+	}
+}
+
+country_event = {
+	id = 8200004
+	title = EVT_8200004_NAME # Puyi Escapes!
+	desc = EVT_8200004_DESC
+	is_triggered_only = yes # MCK
+
+	option = {
+		name = EVT_8200004_A # We are tired of being at the whims of empires
+		government = absolute_monarchy
+		country_event = 800050
+		ruling_party_ideology = traditionalist
+		# make sure gets released if not puppet
+		overlord = {
+			release = THIS
+			# puppet cb
+		}
+		ai_chance = { factor = 1 }
+	}
+
+	option = {
+		name = EVT_8200004_B # We are committed to freedom
+		prestige = -15
+		ai_chance = { factor = 0 }
+	}
+}
+
+# edit the flee to Taiwan event to release Pu Yi if he was sucessfully repatriated to the ROC - trigger 8200004 and war CHI conquer core country vs status quo
+
 country_event = {
   id = 8200005
   title = "EVT_8200005_NAME"
   desc = "EVT_8200005_DESC"
   picture = "nwo2_manchurian_offensive"
-  is_triggered_only = yes
+  is_triggered_only = yes # China
 
   option = {
     name = "OK"
